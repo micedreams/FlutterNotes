@@ -13,6 +13,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late String? _timeString;
+  ValueNotifier<String> valueNotifier = ValueNotifier("");
 
   @override
   void initState() {
@@ -34,7 +35,38 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          valueNotifier.value = _timeString!;
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return SimpleDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  children: <Widget>[
+                    ValueListenableBuilder(
+                      valueListenable: valueNotifier,
+                      builder: (context, value, child) {
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              value.toString(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 2.5,
+                                fontSize: 48,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              });
+        },
         child: const Icon(Icons.add),
       ),
     );
