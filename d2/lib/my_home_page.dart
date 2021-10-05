@@ -1,3 +1,4 @@
+import 'package:d2/my_dialog.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -6,43 +7,58 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  String? _selectedId;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+        appBar: AppBar(
+          title: const Text("Test"),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
+        body: ListView(padding: const EdgeInsets.all(32.0), children: [
+          Container(
+              padding: const EdgeInsets.all(10.0),
+              child: DropdownButton<String>(
+                hint: const Text("Pick a thing"),
+                value: _selectedId,
+                onChanged: (String? value) {
+                  setState(() {
+                    _selectedId = value!;
+                  });
+                },
+                items:
+                    <String>['One', 'Two', 'Three', 'Four'].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              )),
+        ]),
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          tooltip: "New Dialog",
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return MyDialog(
+                    onValueChange: _onValueChange,
+                    initialValue: _selectedId!,
+                  );
+                });
+          },
+        ));
+  }
+
+  void _onValueChange(String value) {
+    setState(() {
+      _selectedId = value;
+    });
   }
 }
+
